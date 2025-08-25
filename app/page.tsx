@@ -31,7 +31,7 @@ export default function Home() {
               <Button asChild>
                 <Link href="/admin/create">
                   <PlusCircle className="h-4 w-4 mr-2" />
-                  Create Post
+                  Write Post
                 </Link>
               </Button>
             )}
