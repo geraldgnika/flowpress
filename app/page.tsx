@@ -1,4 +1,5 @@
 import AuthButton from "@/components/auth-button";
+import PostCard from "@/components/post-card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { Lora } from "next/font/google";
