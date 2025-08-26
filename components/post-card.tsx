@@ -1,3 +1,5 @@
+"use client";
+
 import {
     Card,
     CardContent,
@@ -9,10 +11,32 @@ import { Heart, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
+import MarkdownRenderer from "./markdown-renderer";
 
-export default function PostCard({ post }) {
-    const likeLoading = true;
-    const liked = false;
+interface Post {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  author: {
+    name: string | null;
+    image: string | null;
+  };
+  _count: {
+    comments: number;
+    likes: number;
+  };
+}
+
+export default function PostCard({ post }: { post: Post }) {
+    const { data: session } = useSession();
+    const [liked, setLiked] = useState(false);
+    const [likeCount, setLikeCount] = useState(post._count.likes);
+    const [likeLoading, setLikeLoading] = useState(true);
+
+    const content = post.content.slice(0, 200) + (post.content.length > 200 ? "..." : "");
     
     return (
         <Card>
@@ -30,7 +54,7 @@ export default function PostCard({ post }) {
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <p>Card Content</p>
+                <MarkdownRenderer content={content} />
             </CardContent>
             <CardFooter className="flex items-center space-x-4">
                 <Button
@@ -47,7 +71,7 @@ export default function PostCard({ post }) {
                                 : ""
                         }`}
                     />
-                    <span>10</span>
+                    <span>{likeCount}</span>
                 </Button>
                 <Button
                     variant="ghost"
@@ -55,7 +79,7 @@ export default function PostCard({ post }) {
                     className="flex items-center space-x-1"
                 >
                     <MessageCircle className="h-4 w-4" />
-                    <span>5</span>
+                    <span>post._count.comments</span>
                 </Button>
             </CardFooter>
         </Card>

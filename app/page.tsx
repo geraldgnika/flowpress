@@ -1,9 +1,13 @@
+"use client";
+
 import AuthButton from "@/components/auth-button";
 import PostCard from "@/components/post-card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { Lora } from "next/font/google";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const lora = Lora({
   subsets: ['latin'],
@@ -11,10 +15,43 @@ const lora = Lora({
   style: ['normal'],
 });
 
+interface Post {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  author: {
+    name: string | null;
+    image: string | null;
+  };
+  _count: {
+    comments: number;
+    likes: number;
+  };
+}
+
 export default function Home() {
-  const isCurrrentAuthenticatedUser = true;
-  const posts = [];
-  const loading = true;
+  const { data: session } = useSession();
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    try {
+      const response = await fetch("/api/posts");
+      const data = await response.json();
+      setPosts(data);
+    } catch (error) {
+      console.error("Failed to fetch posts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const isCurrrentAuthenticatedUser = session?.user?.role === "ADMIN";
 
   return (
     <div className="min-h-screen bg-background">
@@ -31,7 +68,7 @@ export default function Home() {
               <Button asChild>
                 <Link href="/admin/create">
                   <PlusCircle className="h-4 w-4 mr-2" />
-                  Write Post
+                  Create Post
                 </Link>
               </Button>
             )}
