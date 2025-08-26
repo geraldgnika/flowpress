@@ -1,5 +1,6 @@
 "use client";
 
+import CommentSection from "@/components/comment-section";
 import PostCard from "@/components/post-card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -91,6 +92,7 @@ export default function PostPage() {
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto space-y-8">
           <PostCard post={post} showFullContent />
+          <CommentSection postId={post.id} />
         </div>
       </main>
     </div>
