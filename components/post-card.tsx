@@ -30,13 +30,15 @@ interface Post {
   };
 }
 
-export default function PostCard({ post }: { post: Post }) {
+export default function PostCard({ post, showFullContent = false }: { post: Post; showFullContent?: boolean }) {
     const { data: session } = useSession();
     const [liked, setLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(post._count.likes);
     const [likeLoading, setLikeLoading] = useState(true);
 
-    const content = post.content.slice(0, 200) + (post.content.length > 200 ? "..." : "");
+    const content = showFullContent
+        ? post.content
+        : post.content.slice(0, 200) + (post.content.length > 200 ? "..." : "");
 
     useEffect(() => {
         const fetchLikeStatus = async () => {
@@ -87,9 +89,13 @@ export default function PostCard({ post }: { post: Post }) {
                     </Avatar>
                 </div>
                 <CardTitle className="text-xl">
-                    <Link href={`/posts/${post.id}`} className="hover:underline">
-                        {post.title}
-                    </Link>
+                    {showFullContent ? (
+                        post.title
+                    ) : (
+                        <Link href={`/posts/${post.id}`} className="hover:underline">
+                            {post.title}
+                        </Link>
+                    )}
                 </CardTitle>
             </CardHeader>
             <CardContent>
