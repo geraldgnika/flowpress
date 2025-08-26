@@ -8,12 +8,12 @@ import {
     CardTitle
 } from "@/components/ui/card";
 import { Heart, MessageCircle } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import MarkdownRenderer from "./markdown-renderer";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
-import { useSession } from "next-auth/react";
-import { useState } from "react";
-import MarkdownRenderer from "./markdown-renderer";
 
 interface Post {
   id: string;
@@ -37,6 +37,45 @@ export default function PostCard({ post }: { post: Post }) {
     const [likeLoading, setLikeLoading] = useState(true);
 
     const content = post.content.slice(0, 200) + (post.content.length > 200 ? "..." : "");
+
+    useEffect(() => {
+        const fetchLikeStatus = async () => {
+        if (!session?.user?.id) {
+            setLikeLoading(false);
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/posts/${post.id}/like-status`);
+            if (response.ok) {
+            const data = await response.json();
+            setLiked(data.liked);
+            }
+        } catch (error) {
+            console.error("Failed to fetch like status:", error);
+        } finally {
+            setLikeLoading(false);
+        }
+        };
+
+        fetchLikeStatus();
+    }, [post.id, session?.user?.id]);
+
+    const handleLike = async () => {
+        if (!session) return;
+
+        try {
+        const response = await fetch(`/api/posts/${post.id}/like`, {
+            method: "POST",
+        });
+        const data = await response.json();
+
+        setLiked(data.liked);
+        setLikeCount((prev) => (data.liked ? prev + 1 : prev - 1));
+        } catch (error) {
+        console.error("Failed to toggle like:", error);
+        }
+    };
     
     return (
         <Card>
@@ -61,6 +100,8 @@ export default function PostCard({ post }: { post: Post }) {
                     variant="ghost"
                     size="sm"
                     className="flex items-center space-x-1"
+                    onClick={handleLike}
+                    disabled={!session}
                 >
                     <Heart
                         className={`h-4 w-4 ${
