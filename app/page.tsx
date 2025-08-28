@@ -80,13 +80,29 @@ export default function Home() {
       
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto space-y-8">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4">Welcome to <span className={`${lora.className} tracking-[0.6px] font-bold text-inherit text-[#313236]`}>Flowpress</span></h1>
-            <p className="text-muted-foreground">
-              A place where knowledge flows, ideas grow, and insights connect.
-            </p>
-          </div>
-
+          {session?.user ? (
+            <div className="flex items-center space-x-4 bg-white p-6 rounded-lg border shadow-sm">
+              <img
+                src={session.user.image || '/default-avatar.png'}
+                alt={session.user.name || 'User'}
+                className="w-20 h-20 rounded-full border border-gray-200 object-cover"
+              />
+              <div>
+                <h1 className="text-2xl font-semibold text-gray-900">{session.user.name}</h1>
+                <p className="text-sm text-gray-500 mt-1">{session.user.name}'s posts</p>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center">
+              <h1 className="text-4xl font-bold mb-4">
+                Welcome to <span className={`${lora.className} tracking-[0.6px] font-bold text-inherit text-[#313236]`}>Flowpress</span>
+              </h1>
+              <p className="text-muted-foreground">
+                A place where knowledge flows, ideas grow, and insights connect.
+              </p>
+            </div>
+          )}
+          
           {loading ? (
             <div className="text-center">Loading posts...</div>
           ) : posts.length === 0 ? (

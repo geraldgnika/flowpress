@@ -29,9 +29,7 @@ export default function PostPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (params.id) {
-      fetchPost(params.id as string);
-    }
+    if (params.id) fetchPost(params.id as string);
   }, [params.id]);
 
   const fetchPost = async (id: string) => {
@@ -48,52 +46,45 @@ export default function PostPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center">Loading post...</div>
-        </div>
-      </div>
-    );
-  }
+  const renderContent = () => {
+    if (loading) return <div className="text-center text-gray-500">Loading post...</div>;
 
-  if (!post) {
-    return (
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold mb-4">Post not found</h1>
-            <Button asChild>
-              <Link href="/">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Home
-              </Link>
-            </Button>
-          </div>
+    if (!post)
+      return (
+        <div className="text-center">
+          <h1 className="text-3xl font-semibold mb-6">Post not found</h1>
+          <Button asChild>
+            <Link href="/">
+              <ArrowLeft className="h-5 w-5 mr-2" />
+              Back to Home
+            </Link>
+          </Button>
         </div>
-      </div>
+      );
+
+    return (
+      <>
+        <PostCard post={post} showFullContent />
+        <CommentSection postId={post.id} />
+      </>
     );
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4">
+    <div className="min-h-screen bg-gray-50 text-gray-900">
+      <header className="border-b border-gray-200 bg-white shadow-sm">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center">
           <Button variant="ghost" asChild>
-            <Link href="/">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Home
+            <Link href="/" className="flex items-center text-gray-700 hover:text-gray-900 transition">
+              <ArrowLeft className="h-5 w-5 mr-2" />
+              Back
             </Link>
           </Button>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto space-y-8">
-          <PostCard post={post} showFullContent />
-          <CommentSection postId={post.id} />
-        </div>
+      <main className="max-w-6xl mx-auto px-6 py-12">
+        <div className="space-y-12">{renderContent()}</div>
       </main>
     </div>
   );
