@@ -4,16 +4,12 @@ import MarkdownRenderer from "@/components/markdown-renderer";
 import { Button } from "@/components/ui/button";
 import {
     Card,
-    CardAction,
     CardContent,
-    CardDescription,
-    CardFooter,
     CardHeader,
-    CardTitle,
+    CardTitle
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Eye } from "lucide-react";
 import Link from "next/link";
@@ -24,7 +20,6 @@ export default function CreatePostPage() {
     const [preview, setPreview] = useState(false);
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const [published, setPublished] = useState(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
@@ -39,7 +34,7 @@ export default function CreatePostPage() {
             const response = await fetch("/api/posts", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({title, content, published})
+                body: JSON.stringify({title, content})
             });
 
             if (response.ok) {
@@ -104,13 +99,6 @@ export default function CreatePostPage() {
                                             rows={20}
                                             required
                                             className="min-h-80"
-                                        />
-                                    </div>
-                                    <div className="flex items-center space-x-2">
-                                        <Switch
-                                            id="published"
-                                            checked={published}
-                                            onCheckedChange={setPublished}
                                         />
                                     </div>
                                     <Button type="submit" disabled={loading} className="w-full">

@@ -1,6 +1,6 @@
-import { type NextRequest, NextResponse } from "next/server"
+import { prisma } from "@/lib/prisma"
 import { requireAuth } from "@/lib/utils/auth"
-import prisma from "@/lib/prisma"
+import { type NextRequest, NextResponse } from "next/server"
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {

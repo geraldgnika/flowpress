@@ -105,7 +105,7 @@ export default function PostCard({ post, showFullContent = false }: { post: Post
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="flex items-center space-x-1"
+                    className="flex items-center space-x-1 cursor-pointer"
                     onClick={handleLike}
                     disabled={!session}
                 >
@@ -123,10 +123,10 @@ export default function PostCard({ post, showFullContent = false }: { post: Post
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="flex items-center space-x-1"
+                    className="flex items-center space-x-1 cursor-default"
                 >
                     <MessageCircle className="h-4 w-4" />
-                    <span>post._count.comments</span>
+                    <span>{post._count.comments}</span>
                 </Button>
             </CardFooter>
         </Card>

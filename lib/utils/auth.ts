@@ -8,7 +8,7 @@ export async function getCurrentUser() {
 
 export async function requireAdmin() {
   const user = await getCurrentUser()
-  if (!user || user.role !== "ADMIN") {
+  if (!user || user.role !== "USER") {
     throw new Error("Admin access required")
   }
   return user

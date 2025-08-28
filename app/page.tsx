@@ -34,6 +34,7 @@ export default function Home() {
   const { data: session } = useSession();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const isAdmin = session?.user?.role === "USER";
 
   useEffect(() => {
     fetchPosts();
@@ -43,15 +44,15 @@ export default function Home() {
     try {
       const response = await fetch("/api/posts");
       const data = await response.json();
-      setPosts(data);
+      // Ensure posts is always an array
+      setPosts(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
+      setPosts([]);
     } finally {
       setLoading(false);
     }
   };
-
-  const isCurrrentAuthenticatedUser = session?.user?.role === "ADMIN";
 
   return (
     <div className="min-h-screen bg-background">
@@ -64,7 +65,7 @@ export default function Home() {
             Flowpress
           </Link>
           <div className="flex items-center space-x-4">
-            {isCurrrentAuthenticatedUser && (
+            {isAdmin && (
               <Button asChild>
                 <Link href="/admin/create">
                   <PlusCircle className="h-4 w-4 mr-2" />
@@ -90,7 +91,7 @@ export default function Home() {
             <div className="text-center">Loading posts...</div>
           ) : posts.length === 0 ? (
             <div className="text-center text-muted-foreground">
-              No posts yet. {isCurrrentAuthenticatedUser && "Create your first post!"}
+              No posts yet. {isAdmin && "Create your first post!"}
             </div>
           ) : (
             <div className="space-y-6">
