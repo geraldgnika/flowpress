@@ -43,7 +43,7 @@ npm install
 ```
 
 ## Database Setup
-1. Install PostgreSQL if not already installed.
+1. Install PostgreSQL if not already installed.  
 2. Create a new database (or use the provided Prisma-hosted database):
 
 ```sql
@@ -79,7 +79,24 @@ AUTH_SECRET="YOUR_RANDOM_SECRET"
 NEXTAUTH_URL="http://localhost:3000"
 ```
 
-Replace placeholders with actual credentials.
+### Generating `AUTH_SECRET`
+The `AUTH_SECRET` is a cryptographically strong random string used by NextAuth for signing and verifying sessions. Generate it using one of these methods:
+
+**Node.js method:**
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+**OpenSSL method:**
+```bash
+openssl rand -hex 32
+```
+
+Copy the generated string and replace `YOUR_RANDOM_SECRET` in `.env`.  
+
+✅ **Important:** Keep `.env` secret. Do **not** commit it to version control. Changing this secret will invalidate all existing sessions.
+
+---
 
 ## Running the Application
 Start development server:
@@ -105,11 +122,11 @@ npm run start
 Follow these steps to create Google OAuth credentials:
 
 1. **Go to Google Cloud Console**: [https://console.cloud.google.com/](https://console.cloud.google.com/)
-2. **Create a project** (or select an existing one).
+2. **Create a project** (or select an existing one).  
 3. Navigate to **APIs & Services → OAuth consent screen**:
    - Choose **External** user type.
    - Fill in app name, user support email, and developer email.
-   - Save and continue.
+   - Save and continue.  
 4. Navigate to **APIs & Services → Credentials → Create Credentials → OAuth 2.0 Client ID**:
    - Application type: **Web application**
    - Name: `Flowpress Dev` (or any name)
